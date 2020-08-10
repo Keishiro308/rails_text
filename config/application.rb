@@ -18,7 +18,7 @@ module Baukis2
       g.helper false
       g.assets false
       g.test_framework :rspec
-      g.controller_spacs false
+      g.controller_specs false
       g.view_specs false
     end
     
