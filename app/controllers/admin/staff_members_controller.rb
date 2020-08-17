@@ -1,4 +1,5 @@
 class Admin::StaffMembersController < Admin::Base
+
   def index
     @staff_members = StaffMember.order(:family_name_kana, :given_name_kana)
   end
@@ -51,8 +52,6 @@ class Admin::StaffMembersController < Admin::Base
       :start_date, :end_date, :suspended
     )
   end
-  
-  
   
   
 end
