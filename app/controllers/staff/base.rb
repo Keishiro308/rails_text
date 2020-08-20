@@ -21,7 +21,7 @@ class Staff::Base < ApplicationController
   TIMEOUT = 60.minutes
 
   private def check_timeout
-    if current_staff_member
+    if session[:last_access_time]
       if session[:last_access_time] >= TIMEOUT.ago
         session[:last_access_time] = Time.current
       else
