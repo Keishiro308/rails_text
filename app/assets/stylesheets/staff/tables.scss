@@ -2,6 +2,9 @@
 @import "dimensions";
 
 div.table-wrapper {
+  width: 90%;
+  margin: 0 auto;
+
   div.links {
     text-align: right;
     padding: $moderate;

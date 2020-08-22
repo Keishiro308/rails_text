@@ -7,7 +7,7 @@
     remote:        data-remote
 -%>
 <span class="prev">
-  <%= link_to_unless(current_page.first?, t('views.pagination.last').html_safe, url) do |name|
+  <%= link_to_unless(current_page.first?, t('views.pagination.previous').html_safe, url) do |name|
     content_tag(:span, name, class: "disabled")
   end %>
 </span>
