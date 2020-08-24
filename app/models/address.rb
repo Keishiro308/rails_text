@@ -2,6 +2,7 @@ class Address < ApplicationRecord
   include StringNormalizer
 
   belongs_to :customer
+  has_many :phones, -> { order(:id) }, dependent: :destroy, autosave: true
 
   PREFECTURE_NAMES = %w(
     北海道
@@ -18,5 +19,7 @@ class Address < ApplicationRecord
 
   validates :postal_code, format: { with: /\A\d{7}\z/, allow_blank: true }
   validates :prefecture, inclusion: { in: PREFECTURE_NAMES, allow_blank: true }
+
+  
 
 end

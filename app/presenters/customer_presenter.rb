@@ -30,5 +30,9 @@ class CustomerPresenter < ModelPresenter
   def updated_at
     object.updated_at.try(:strftime, "%Y/%m/%d %H:%M:%S")
   end
+
+  def personal_phones
+    object.personal_phones.map(&:number)
+  end
   
 end
