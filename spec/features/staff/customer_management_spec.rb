@@ -72,6 +72,20 @@ feature "職員による顧客管理" do
     expect(new_customer.work_address.company_name).to eq("テスト")
   end
 
+  scenario "職員が勤務先を追加する" do
+    customer.work_address.destroy
+    customer.reload
+    click_link "顧客管理"
+    first("table.listing").click_link "編集"
+
+    check '勤務先を入力する'
+    fill_in "会社名", with: "テスト"
+    click_button "更新"
+    customer.reload
+    expect(customer.work_address.present?).to be_truthy
+    expect(customer.work_address.company_name).to eq('テスト')
+  end
+
   scenario "職員が顧客、自宅住所、勤務先を更新する" do
     click_link "顧客管理"
     first("table.listing").click_link "編集"
