@@ -1,5 +1,5 @@
 class Program < ApplicationRecord
-  has_many :entries, dependent: :restrict_with_exceptions
+  has_many :entries, dependent: :restrict_with_exception
   has_many :applicants, through: :entries, source: :customer
   belongs_to :registrant, class_name: 'StaffMember'
 
@@ -9,6 +9,10 @@ class Program < ApplicationRecord
       .group("programs.id")
       .order(application_start_time: :desc)
       .includes(:registrant)
+  }
+  scope :published, -> {
+    where("application_start_time <= ?", Time.current)
+      .order(application_start_time: :desc)
   }
 
   attribute :application_start_date, :date, default: Date.today
