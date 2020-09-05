@@ -45,7 +45,7 @@ describe "職員による自分のアカウントの管理" do
     example "email属性を変更する" do
       params_hash.merge!(email: "test@example.com")
       patch staff_account_url,
-        params: { id: staff_member.id, staff_member: params_hash }
+        params: { id: staff_member.id, staff_member: params_hash, commit: true }
       staff_member.reload
       expect(staff_member.email).to eq("test@example.com")
     end

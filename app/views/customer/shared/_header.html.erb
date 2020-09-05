@@ -4,6 +4,7 @@
   <%= content_tag(:span, flash.alert, class: "alert") if flash.alert %>
   <% if current_customer %>
     <%= link_to  "ログアウト", :customer_session, method: :delete %>
+    <%= link_to  "アカウント", :customer_account %>
   <% else %>
     <%= link_to  "ログイン", :customer_login %>
   <% end %>
