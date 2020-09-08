@@ -5,27 +5,49 @@ class Message < ApplicationRecord
     optional: true
   belongs_to :parent, class_name: 'Message', foreign_key: 'parent_id',
     optional: true
+  has_many :message_tag_links, dependent: :destroy
+  has_many :tags, -> { order(:value) }, through: :message_tag_links
   
-    before_validation do
-      if parent
-        self.customer = parent.customer
-        self.root = parent.root || parent
+  before_validation do
+    if parent
+      self.customer = parent.customer
+      self.root = parent.root || parent
+    end
+  end
+
+  validates :subject, presence: true, length: { maximum: 80 }
+  validates :body, presence: true, length: { maximum: 800 }
+
+  scope :not_deleted, -> { where(deleted: false)}
+  scope :deleted, -> { where(deleted: true)}
+  scope :sorted, -> { order(created_at: :desc)}
+
+  attr_accessor :child_nodes
+
+  def tree
+    return @tree if @tree
+    r = root || self
+    messages = Message.where(root_id: r.id).select(:id, :parent_id, :subject)
+    @tree = SimpleTree.new(r, messages)
+  end
+  def add_tag(label)
+    self.class.transaction do
+      tag = Tag.find_by(value: label)
+      tag ||= Tag.create!(value: label)
+      unless message_tag_links.where(tag_id: tag.id).exists?
+        message_tag_links.create!(tag_id: tag.id)
       end
     end
-
-    validates :subject, presence: true, length: { maximum: 80 }
-    validates :body, presence: true, length: { maximum: 800 }
-
-    scope :not_deleted, -> { where(deleted: false)}
-    scope :deleted, -> { where(deleted: true)}
-    scope :sorted, -> { order(created_at: :desc)}
-
-    attr_accessor :child_nodes
-
-    def tree
-      return @tree if @tree
-      r = root || self
-      messages = Message.where(root_id: r.id).select(:id, :parent_id, :subject)
-      @tree = SimpleTree.new(r, messages)
+  end
+  def remove_tag(label)
+    self.class.transaction do
+      if tag = Tag.find_by(value: label)
+        message_tag_links.find_by(tag_id: tag.id).destroy
+        if tag.message_tag_links.empty?
+          tag.destroy
+        end
+      end
     end
+  end
+  
 end

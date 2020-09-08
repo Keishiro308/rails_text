@@ -10,7 +10,7 @@ class Staff::MessagesController < Staff::Base
 
   def outbound
     @messages = StaffMessage.not_deleted.sorted.page(params[:page])
-    render aciton: 'index'
+    render template: 'staff/messages/index'
   end
 
   def deleted
