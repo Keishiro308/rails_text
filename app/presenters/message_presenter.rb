@@ -28,7 +28,7 @@ class MessagePresenter < ModelPresenter
     when CustomerMessage
       ''
     when StaffMessage
-      object.staff_member.family_name + ' ' + object.staff_member.given_name
+      object.customer.family_name + ' ' + object.customer.given_name
     else
       raise
     end

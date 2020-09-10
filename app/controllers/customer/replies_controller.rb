@@ -1,13 +1,12 @@
-class Staff::RepliesController < Staff::Base
+class Customer::RepliesController < Customer::Base
   before_action :prepare_message
 
   def new
-    @reply = StaffMessage.new
+    @reply = CustomerMessage.new
   end
 
   def confirm
-    @reply = StaffMessage.new(staff_message_params)
-    @reply.staff_member = current_staff_member
+    @reply = CustomerMessage.new(customer_message_params)
     @reply.parent = @message
     if @reply.valid?
       render action: 'confirm'
@@ -18,14 +17,13 @@ class Staff::RepliesController < Staff::Base
   end
 
   def create
-    @reply = StaffMessage.new(staff_message_params)
+    @reply = CustomerMessage.new(customer_message_params)
     if params[:commit]
-      @reply.staff_member = current_staff_member
       @reply.parent = @message
-      @reply.customer = @message.customer
+      @reply.customer = current_customer
       if @reply.save
         flash.notice = '問い合わせに返信しました。'
-        redirect_to :outbound_staff_messages
+        redirect_to :customer_messages
       else
         flash.now.alert = '入力に誤りがあります。'
         render action: 'new'
@@ -36,10 +34,10 @@ class Staff::RepliesController < Staff::Base
   end
 
   private def prepare_message
-    @message = CustomerMessage.find(params[:message_id])
+    @message = StaffMessage.find(params[:message_id])
   end
 
-  private def staff_message_params
-    params.require(:staff_message).permit(:subject, :body)
+  private def customer_message_params
+    params.require(:customer_message).permit(:subject, :body)
   end
 end
